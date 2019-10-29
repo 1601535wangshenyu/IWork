@@ -1,3 +1,4 @@
+// eslint-disable-next-line
 module.exports = {
   root: true,
   env: {
@@ -5,11 +6,12 @@ module.exports = {
   },
   'extends': [
     'plugin:vue/essential',
-    '@vue/standard'
+  //  '@vue/standard'
   ],
   rules: {
     'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+    "indent": ["off", 2]
   },
   parserOptions: {
     parser: 'babel-eslint'

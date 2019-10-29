@@ -1,3 +1,4 @@
+// eslint-disable-next-line to ignore the next line.
 module.exports = {
     publicPath: '/',//publicPath取代了baseUrl
     outputDir: 'dist',
