@@ -8,12 +8,12 @@
       <el-input type="password" v-model="loginForm.password" prefix-icon="el-icon-unlock" auto-complete="off" placeholder="密码"></el-input>
     </el-form-item>
     <el-form-item prop="checkCode">
-      <el-row>
-        <el-col span="10">
+      <el-row >
+        <el-col :span="8">
           <el-input type="text" auto-complete="off" prefix-icon="el-icon-key" style="width:180px" placeholder="验证码" >
           </el-input>
         </el-col>
-        <el-col span="2">
+        <el-col :span="2" :offset="2">
           <div class="divIdentifyingCode" @click="getIdentifyingCode(true)">
             <img id="imgIdentifyingCode" style="height:40px; width: 100px; cursor: pointer;" alt="点击更换" title="图片" />
           </div>
@@ -23,6 +23,7 @@
     <el-form-item style="width: 100%">
       <el-button type="primary" style="width: 100%" @click="submitClick">登录</el-button>
     </el-form-item>
+    
   </el-form>
 </template>
 <script>
@@ -52,45 +53,48 @@
     methods: {
       submitClick: function() {
         var _this = this;
-        this.loading = true;
-        this.postRequestLogin("/login", {
-          username: this.loginForm.username,
-          password: this.loginForm.password
-        }).then(resp => {
-          _this.loading = false;
-          if (resp && resp.status == 200) {
-            var data = resp.data
-            var roleId = data.roleInfos[0].roleId
-            this.$store.state.user.userId = data.userId
-            this.$store.state.user.username = data.username
-            this.$store.state.user.cname = data.cname
-            this.$store.state.user.roleId = data.roleInfos[0].roleId
-            this.$store.state.user.roleName = data.roleInfos[0].roleDesc
-            this.$store.state.user.roleDepart = data.roleDepart
-            this.initRoutesStore(data.roleInfos[0].sysFuns)
-            // 当前登录用户的第一个子地址
-            var firstSubUri = data.roleInfos[0].sysFuns[0].subSysFunList[0].nodeURL;
-            var path = _this.$route.query.redirect;
-            //管理员端：
-            if (this.$store.state.user.roleId === 1) {
-              _this.$router.replace({
-                path: path == "/" || path == undefined ? "/schedule/note" : path
-              })
-            }
-            //普通用户端
-            else if (this.$store.state.user.roleId === 2) {
-              _this.$router.replace({
-                path: path == "/" || path == undefined ? "/attendence/staff" : path
-              })
-            }
-            // 其他的用户
-            else {
-              _this.$router.replace({
-                path: path == "/" || path == undefined ? firstSubUri : path
-              })
-            }
-          }
-        })
+        console.log("click");
+        var path = _this.$route.query.redirect;
+        this.$router.replace({path:"/home"});//56-58行：测试
+        // this.loading = true;
+        // this.postRequestLogin("/login", {
+        //   username: this.loginForm.username,
+        //   password: this.loginForm.password
+        // }).then(resp => {
+        //   _this.loading = false;
+        //   if (resp && resp.status == 200) {
+        //     var data = resp.data
+        //     var roleId = data.roleInfos[0].roleId
+        //     this.$store.state.user.userId = data.userId
+        //     this.$store.state.user.username = data.username
+        //     this.$store.state.user.cname = data.cname
+        //     this.$store.state.user.roleId = data.roleInfos[0].roleId
+        //     this.$store.state.user.roleName = data.roleInfos[0].roleDesc
+        //     this.$store.state.user.roleDepart = data.roleDepart
+        //     this.initRoutesStore(data.roleInfos[0].sysFuns)
+        //     // 当前登录用户的第一个子地址
+        //     var firstSubUri = data.roleInfos[0].sysFuns[0].subSysFunList[0].nodeURL;
+        //     var path = _this.$route.query.redirect;
+        //     //管理员端：
+        //     if (this.$store.state.user.roleId === 1) {
+        //       _this.$router.replace({
+        //         path: path == "/" || path == undefined ? "/schedule/note" : path
+        //       })
+        //     }
+        //     //普通用户端
+        //     else if (this.$store.state.user.roleId === 2) {
+        //       _this.$router.replace({
+        //         path: path == "/" || path == undefined ? "/attendence/staff" : path
+        //       })
+        //     }
+        //     // 其他的用户
+        //     else {
+        //       _this.$router.replace({
+        //         path: path == "/" || path == undefined ? firstSubUri : path
+        //       })
+        //     }
+        //   }
+        // })
       },
       /**
        * 是否刷新
