@@ -1,3 +1,4 @@
+
 module.exports = {
     publicPath: '/',//publicPath取代了baseUrl
     outputDir: 'dist',
@@ -10,13 +11,25 @@ module.exports = {
     // 配置 webpack-dev-server 行为。
     devServer: {
       open: process.platform === 'darwin',
-      host: '127.0.0.1',
+      host:'localhost',
       port: 8081,
       https: false,
       hotOnly: false,
       // 查阅 https://github.com/vuejs/vue-doc-zh-cn/vue-cli/cli-service.md#配置代理
-      proxy: null, // string | Object
-      before: app => {}
+      proxy: {
+        '/': {
+          target: 'http://10.1.246.219:8083',
+          changeOrigin: true,
+          pathRewrite: {
+            '^/': ''
+          }
+        },
+        '/ws/*': {
+          target: 'ws://10.1.246.219:8083',
+          ws: true
+        }
+
+      }
     }
   }
 
