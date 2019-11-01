@@ -1,9 +1,9 @@
-package com.nchu.ruanko.greenfarm.util.string;
+package com.nchu.ruanko.iwork.utils.string;
 
-import java.util.Random;
-import java.util.UUID;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
+import java.util.Random;
+import java.util.UUID;
 
 /**
  * 字符串处理工具类

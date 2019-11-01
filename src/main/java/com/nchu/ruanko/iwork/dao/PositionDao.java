@@ -15,5 +15,5 @@ public interface PositionDao {
     @Select("SELECT *" +
             " FROM i_tb_position" +
             " WHERE p_uid=#{uid}")
-    Position getNationByNationUid(@Param(value = "uid") String positionUid);
+    Position getPositionByPositionUid(@Param(value = "uid") String positionUid);
 }

@@ -1,4 +1,4 @@
-package com.nchu.ruanko.greenfarm.util.graph;
+package com.nchu.ruanko.iwork.utils.graph;
 
 import javax.imageio.ImageIO;
 import java.awt.*;

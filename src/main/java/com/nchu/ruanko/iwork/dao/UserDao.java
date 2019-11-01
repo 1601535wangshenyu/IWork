@@ -14,12 +14,12 @@ public interface UserDao {
             @Result(property = "gender", column = "u_gender"),
             @Result(property = "birthday", column = "u_birthday"),
             @Result(property = "wedLock", column = "u_wedlock"),
-            @Result(property = "nation", column = "u_nationId"),
+            @Result(property = "nation", column = "u_nationId",one = @One(select = "com.nchu.ruanko.iwork.NationDao.getNationByNationUid")),
             @Result(property = "nativePlace", column = "u_nativePlace"),
-            @Result(property = "politicsStatus", column = "u_politicId"),
-            @Result(property = "oweDepartment", column = "u_departmentId"),
-            @Result(property = "jobLevel", column = "u_joblevelId"),
-            @Result(property = "position", column = "u_posId"),
+            @Result(property = "politicsStatus", column = "u_politicId",one = @One(select = "com.nchu.ruanko.iwork.PoliticsStatusDao.getPoliticsStatusByPoliticsStatusUid")),
+            @Result(property = "oweDepartment", column = "u_departmentId",one = @One(select = "com.nchu.ruanko.iwork.DepartmentDao.getDepartmentByDepartmentUid")),
+            @Result(property = "jobLevel", column = "u_joblevelId",one = @One(select = "com.nchu.ruanko.iwork.JobLevelDao.getJobLevelByJobLevelUid")),
+            @Result(property = "position", column = "u_posId",one = @One(select = "com.nchu.ruanko.iwork.PositionDao.getPositionByPositionUid")),
             @Result(property = "engageForm", column = "u_engageForm"),
             @Result(property = "specialty", column = "u_specialty"),
             @Result(property = "tiptopDegree", column = "u_tiptopDegree"),
@@ -36,14 +36,27 @@ public interface UserDao {
             @Result(property = "mail", column = "u_mail"),
             @Result(property = "idCard", column = "u_idcard"),
             @Result(property = "address", column = "u_address"),
-            @Result(property = "employeeState", column = "u_state"),
+            @Result(property = "employeeState", column = "u_state",one = @One(select = "com.nchu.ruanko.iwork.EmployeeStateDao.getEmployeeStateByEmployeeStateUid")),
             @Result(property = "userFace", column = "u_userface"),
             @Result(property = "remark", column = "u_remark")
     })
     @Select("SELECT *" +
             " FROM gf_tb_user" +
             " WHERE u_workId=#{u_workId} AND u_password=#{password}")
-    User getUserByUsernameAndPassword(@Param(value = "u_workId") String workId, @Param(value = "password") String password);
+    User getUserByWorkIdAndPassword(@Param(value = "u_workId") String workId, @Param(value = "password") String password);
 
+
+    @ResultMap(value="userMapper1")
+    @Select("SELECT *" +
+            " FROM gf_tb_user" +
+            " WHERE u_phone=#{u_phone} AND u_password=#{password}")
+    User getUserByPhoneAndPassword(@Param(value = "u_phone") String phone, @Param(value = "password") String password);
+
+
+    @ResultMap(value="userMapper1")
+    @Select("SELECT *" +
+            " FROM gf_tb_user" +
+            " WHERE u_mail=#{u_mail} AND u_password=#{password}")
+    User getUserByMailAndPassword(@Param(value = "u_mail") String mail, @Param(value = "password") String password);
 
 }

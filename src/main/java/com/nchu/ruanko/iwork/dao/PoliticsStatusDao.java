@@ -13,5 +13,5 @@ public interface PoliticsStatusDao {
     @Select("SELECT *" +
             " FROM i_tb_politicsstatus" +
             " WHERE p_id=#{uid}")
-    PoliticsStatus getNationByNationUid(@Param(value = "uid") String politicsStatusUid);
+    PoliticsStatus getPoliticsStatusByPoliticsStatusUid(@Param(value = "uid") String politicsStatusUid);
 }

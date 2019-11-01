@@ -1,4 +1,4 @@
-package com.nchu.ruanko.greenfarm.util.shortmessage;
+package com.nchu.ruanko.iwork.utils.shortmessage;
 
 public enum ShortMessageErrorsEnum {
 
