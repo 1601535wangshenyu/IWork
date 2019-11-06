@@ -36,7 +36,7 @@ public class RegisterController {
     private MailService mailService;
 
     /**
-     * 手机短信模板
+     * 手机短信模板 SMS_174992150
      */
     private static final String MESSAGE_TEMPLATE = "SMS_174020806";
 
