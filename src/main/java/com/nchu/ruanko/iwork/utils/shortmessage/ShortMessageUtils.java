@@ -13,17 +13,17 @@ import com.aliyuncs.profile.DefaultProfile;
 /**
  * 短信工具类
  *
- * @author Yuan Yueshun
+ * @author Wang Yueshun
  */
 public final class ShortMessageUtils {
 
-    private static final String SIGN_NAME = "绿色农场";
+    private static final String SIGN_NAME = "Iwork人事管理";
     private static final String DOMAIN = "dysmsapi.aliyuncs.com";
     private static final String VERSION = "2017-05-25";
     private static final String ACTION = "SendSms";
     private static final String REGION_ID = "default";
-    private static final String ACCESS_KEY_ID = "LTAI4FwoLysPvAPPcVXRDRm9";
-    private static final String ACCESS_KEY_SECRET = "f8N0GRr2kQtHQAGPCC7WY3OYOgTN91";
+    private static final String ACCESS_KEY_ID = "LTAI4FtrEwr8DRthdtdKRATw";
+    private static final String ACCESS_KEY_SECRET = "bferzXY6A1Aubd4CqfMbmoZEEMHrrm";
 
     private static IAcsClient client;
 

@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.nchu.ruanko.iwork.application.service.UserService;
 import com.nchu.ruanko.iwork.domain.constant.CrossConstant;
 import com.nchu.ruanko.iwork.domain.entity.User;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +16,7 @@ import javax.servlet.http.HttpSession;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
-
+@Api(tags = "common.LoginController", description = "“登录”功能控制器")
 @RestController
 @CrossOrigin
 public class LoginController {
@@ -23,8 +25,7 @@ public class LoginController {
 
     private final AtomicLong counter = new AtomicLong();
 
-
-    @CrossOrigin(origins = "http://"+ CrossConstant.ALLOW_IP+":8081")
+    @ApiOperation(value = "userLoginWithPasswordOperation", notes = "登录逻辑处理")
     @PostMapping(value = "/user/password/login/operation")
     @ResponseBody
     public String userLoginWithPasswordOperation(@RequestBody Map map, HttpServletRequest request) {
@@ -38,7 +39,7 @@ public class LoginController {
         HttpSession session = request.getSession();
         User user;
         String code = (String) session.getAttribute("graphVcode");
-        if (!code.equals(vcode)) {
+        if (!vcode.equals(code)) {
             json.put("flag", false);
             json.put("reason", "验证码错误！");
             session.removeAttribute("graphVcode");

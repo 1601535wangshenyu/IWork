@@ -10,7 +10,7 @@ public class Leave {
     private Leavetype leavetype;
     private Date startTime;
     private Date endTime;
-    private String leaveTime;
+    private Date leaveTime;
     private Date approveDate;
     private User approver;
     private String approveResult;
@@ -72,11 +72,11 @@ public class Leave {
         this.endTime = endTime;
     }
 
-    public String getLeaveTime() {
+    public Date getLeaveTime() {
         return leaveTime;
     }
 
-    public void setLeaveTime(String leaveTime) {
+    public void setLeaveTime(Date leaveTime) {
         this.leaveTime = leaveTime;
     }
 

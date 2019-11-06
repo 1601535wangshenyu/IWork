@@ -2,6 +2,8 @@ package com.nchu.ruanko.iwork.web.controller.common;
 
 import com.nchu.ruanko.iwork.domain.constant.CrossConstant;
 import com.nchu.ruanko.iwork.utils.graph.GraphVerificationCodeUtils;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +17,7 @@ import java.io.IOException;
  *
  * @author woshiwo13021 CSDN
  */
-
+@Api(tags = "common.GraphVerificationCodeController", description = "“图片验证码生成”功能控制器")
 @Controller
 public class GraphVerificationCodeController {
 
@@ -26,7 +28,8 @@ public class GraphVerificationCodeController {
      * @param response HTTP 响应
      * @throws IOException 异常
      */
-    @CrossOrigin(origins = "http://"+ CrossConstant.ALLOW_IP+":8081")
+    @ApiOperation(value = "getGraphVerificationCode", notes = "前端请求该链接，获取图片验证码")
+    /*@CrossOrigin(origins = "http://"+ CrossConstant.ALLOW_IP+":8081")*/
     @GetMapping("/graph/vcode")
     public void getGraphVerificationCode(HttpServletRequest request, HttpServletResponse response) throws IOException {
 

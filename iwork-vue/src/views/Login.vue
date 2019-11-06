@@ -27,7 +27,6 @@
   </el-form>
 </template>
 <script>
-  import SIdentify from '../components/identify'
   export default {
     data() {
       return {
