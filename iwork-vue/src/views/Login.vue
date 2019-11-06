@@ -97,7 +97,7 @@
         <el-form-item prop="checkPass2" label="确认密码：">
           <el-input type="password" v-model="registerForm.checkPass2" prefix-icon="el-icon-unlock" auto-complete="off" placeholder="确认新密码"></el-input>
         </el-form-item>
-          <el-button type="primary" style="width: 100%" @click="submitClick">注册</el-button>
+          <el-button type="primary" style="width: 100%" @click="registerClick">注册</el-button>
      
       </el-form>
     </el-tab-pane>
@@ -136,8 +136,7 @@ const TIME_COUNT = 60
           mail:[{required: true,validator:validateMail,trigger:"blur"}],
           tel:[{required: true,message: '请输入手机号',trigger: 'blur'},{validator:validatePhone,trigger:"blur"}],
           checkCode:[{required: true,message: '请输入验证码',trigger: 'blur'}],
-          id: [{ required: true,message: '请输入员工id',trigger: 'blur'},{type:'number',message:'请输入正确的员工ID',trigger:"blur"}],
-          
+          id: [{ required: true,message: '请输入员工id',trigger: 'blur'},{validator:isEngNumLine,trigger:"blur"}],
           checkPass1: [{ required: true,message: '请输入密码',trigger: 'blur'},{validator:isEngNumLine,trigger:"blur"}],
           checkPass2: [{ required: true,message: '请再次输入密码',trigger: 'blur'},
                        {validator:(rule,value,callback)=>{
@@ -181,7 +180,7 @@ const TIME_COUNT = 60
       }
     },
     created() {
-      this.getIdentifyCode();
+      //this.getIdentifyCode();
     },
 
     methods: {
@@ -216,15 +215,19 @@ const TIME_COUNT = 60
         let userid='' ;
         let email='';
         let tel=''; 
-        if (str==='forget') {
+        let obj;
+        let target='';
+        if (str==='forget') {//忘记密码
           userid=this.forgetForm.id;
+          obj = this.forgetForm;
           if (this.isTel1===true) {
             tel = this.forgetForm.tel;
           }else{
             email = this.forgetForm.mail;
           }
-        }else if (str==='register') {
+        }else if (str==='register') {//注册
           userid=this.registerForm.id;
+          obj = this.registerForm;
           if (this.isTel===true) {
             tel = this.registerForm.tel;
           }else{
@@ -233,26 +236,44 @@ const TIME_COUNT = 60
         }else{
           console.error('Send Code Error!');
         }
-        var datas = {
-          id: userid,
-
-        };
-        this.axios.post("" + account, datas).then(resp => {
-          console.log("API测试");
-          if (resp.data && resp.data.status == 200) {
-            var data = resp.data.obj;
-            console.log("data.json:", JSON.stringify(data));
-          }
-        });
+        //手机号验证
+        if (this.isTel||this.isTel1) {
+          this.axios.post("/message/vcode/register",tel).then(resp => {
+            console.log(resp.data);
+            console.log(resp.data.status)
+            if (resp.data && resp.data.status == 200) {
+              console.log(resp);
+            }
+          });
+        }else{//邮箱验证
+          this.axios.post("user/register/mail/data",{
+            id:obj.id,
+            mail:mail,
+          }).then(resp => {
+            console.log("邮箱验证码API测试");
+            if (resp.data && resp.data.status == 200) {
+              var data = resp.data.obj;
+              console.log(resp);
+            }
+          });
+        }
+        
       },
 
       //确认修改
       ChangePassword:function() {
         console.log("checkCode:" + this.forgetForm.checkCode+"\n"+"newPassWord:" + this.forgetForm.checkPass2);
+        
         this.diaglogVisible=false;
       },
       Cancel() {
         this.diaglogVisible = false;
+      },
+
+      //注册
+      registerClick:function(){
+        console.log("checkCode:" + this.registerForm.checkCode+"\n"+"newPassWord:" + this.registerForm.checkPass2);
+        
       },
       /**
        * 是否刷新，获取验证码图片
