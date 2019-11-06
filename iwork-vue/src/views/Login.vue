@@ -1,185 +1,292 @@
 <template>
-  <el-tabs type="border-card" class="login-container" strech="true" >
-  <el-tab-pane label="登录" style="">
-  <el-form :rules="rules" class="loginForm"  label-position="left" label-width="0px" v-loading="loading">
-    <h3 class="login_title">登录</h3>
-    <el-form-item prop="account">
-      <el-input type="text" v-model="loginForm.key" prefix-icon="el-icon-user" auto-complete="off" placeholder="用户名"></el-input>
-    </el-form-item>
-    <el-form-item prop="checkPass">
-      <el-input type="password" v-model="loginForm.password" prefix-icon="el-icon-unlock" auto-complete="off" placeholder="密码"></el-input>
-    </el-form-item>
-    <el-form-item prop="checkCode">
-      <el-row>
-        <el-col :span="8">
-          <el-input type="text" v-model="loginForm.vcode" auto-complete="off" prefix-icon="el-icon-key" style="width:180px" placeholder="验证码">
-          </el-input>
-        </el-col>
-        <el-col :span="2" :offset="2">
-          <div class="divIdentifyCode" @click="getIdentifyCode">
-            <!-- <SIdentify :identifyCode="identifyCode"></SIdentify> -->
-            <img :src="imgCode" id="imgCode">
-          </div>
-        </el-col>
-      </el-row>
-    </el-form-item>
-    <el-form-item style="width: 100%">
-      <el-button type="primary" style="width: 100%" @click="submitClick">登录</el-button>
-    </el-form-item>
+  <el-tabs type="border-card" class="login-container" strech="true">
+    <el-tab-pane label="登录" style="border-radius:15px;">
+      <el-form :rules="loginRules" :model="loginForm" class="loginForm" label-position="left" label-width="0px" v-loading="loading">
+        <h3 class="login_title">登 录</h3>
+        <el-form-item prop="key">
+          <el-input type="text" v-model="loginForm.key" prefix-icon="el-icon-user" auto-complete="off" placeholder="用户名"></el-input>
+        </el-form-item>
+        <el-form-item prop="checkPass">
+          <el-input type="password" v-model="loginForm.password" prefix-icon="el-icon-unlock" auto-complete="off" placeholder="密码"></el-input>
+        </el-form-item>
+        <el-form-item prop="checkCode">
+          <el-row>
+            <el-col :span="8">
+              <el-input type="text" v-model="loginForm.vcode" auto-complete="off" style="width:160px;" prefix-icon="el-icon-key" placeholder="验证码">
+              </el-input>
+            </el-col>
+            <el-col :span="2" :offset="7">
+              <div class="divIdentifyCode" @click="getIdentifyCode">
+                <img :src="imgCode" id="imgCode">
+              </div>
+            </el-col>
+          </el-row>
+        </el-form-item>
+        <el-form-item style="width: 100%">
+          <el-button type="primary" style="width: 100%" @click="submitClick">登录</el-button>
+        </el-form-item>
+        <!-- 忘记密码 -->
+        <el-button type="text" @click="diaglogVisible=true">忘记密码</el-button>
+        <el-dialog>
+        </el-dialog>
+      </el-form>
 
-    <!-- 忘记密码+注册 -->
-    <el-button type="text" @click="forgetPass" >忘记密码</el-button>
+      <el-dialog title="重置密码" :visible.sync="diaglogVisible" width="36%" >
+        <el-form class="loginForm" :model="forgetForm" :rules="forgetRules" label-position="left" label-width="100px" v-loading="loading">
+          <el-radio-group v-model="forgetRadio" @change="changeForgetRadio" style="margin-bottom: 30px;">
+            <el-radio-button :label="1" >邮箱验证</el-radio-button>
+            <el-radio-button :label="2" >手机验证</el-radio-button>
+          </el-radio-group>
+          <el-form-item prop="id" label="员工ID：">
+            <el-input type="text" v-model="forgetForm.id" prefix-icon="el-icon-bank-card" auto-complete="off" placeholder="员工ID"></el-input>
+          </el-form-item>
+          <el-form-item prop="tel" label="手机：" v-if="isTel1" >
+            <el-input  v-model="forgetForm.tel" prefix-icon="el-icon-phone" auto-complete="off" placeholder="手机号"></el-input>
+          </el-form-item>
+          <el-form-item prop="mail" label="邮箱：" v-else >
+            <el-input  v-model="forgetForm.mail" key="mail" prefix-icon="el-icon-message" auto-complete="off" placeholder="邮箱"></el-input>
+          </el-form-item>
+          <el-form-item prop="checkCode" label="验证码：">
+              <el-input type="text" v-model="forgetForm.checkCode" auto-complete="off"  prefix-icon="el-icon-key" placeholder="验证码">
+              </el-input>
+          </el-form-item>
+          <el-form-item>
+              <el-button plain style="font-size:14px;width:100%;margin-top:-10px;" @click="sendCode('forget')">点击发送验证码</el-button>
+          </el-form-item>
+          <el-form-item prop="checkPass1" label="新密码：">
+            <el-input type="password" v-model="forgetForm.checkPass1" prefix-icon="el-icon-unlock" auto-complete="off" placeholder="新密码"></el-input>
+          </el-form-item>
+          <el-form-item prop="checkPass2" label="确认密码：">
+            <el-input type="password" v-model="forgetForm.checkPass2" prefix-icon="el-icon-unlock" auto-complete="off" placeholder="确认新密码"></el-input>
+          </el-form-item>
+          <el-button type="primary" @click="ChangePassword">确认</el-button>
+          <el-button  @click="Cancel">取消</el-button>
+        </el-form>
+      </el-dialog>
+    </el-tab-pane>
 
-    <el-dialog></el-dialog>
-  </el-form>
-  </el-tab-pane>
-  <el-tab-pane label="注册"></el-tab-pane>
+    <!-- 注册 -->
+    <el-tab-pane label="注册" style="border-radius:15px;">
+      <el-form :rules="registerRules" :model="registerForm" ref="registerForm" class="loginForm" label-position="left" label-width="100px" v-loading="loading">
+        <h3 class="login_title" style="margin-bottom:24px;">注   册</h3>
+          <el-radio v-model="radio" label="1" @change="changeRadio" style="margin:0px 20px 16px 30px;">邮箱注册</el-radio>
+          <el-radio v-model="radio" label="2" @change="changeRadio" style="margin-bottom:5px;">手机注册</el-radio>
+        <el-form-item prop="tel" label="手机：" v-if="isTel" >
+          <el-input  v-model="registerForm.tel" prefix-icon="el-icon-phone" auto-complete="off" placeholder="手机号"></el-input>
+        </el-form-item>
+        <el-form-item prop="mail" label="邮箱：" v-else >
+          <el-input  v-model="registerForm.mail" key="mail" prefix-icon="el-icon-message" auto-complete="off" placeholder="邮箱"></el-input>
+        </el-form-item>
+          <el-form-item prop="checkCode" label="验证码：">
+              <el-input type="text" v-model="registerForm.checkCode" auto-complete="off"  prefix-icon="el-icon-key" placeholder="验证码">
+              </el-input>
+        </el-form-item>
+        <el-form-item>
+            <el-button plain style="font-size:14px;width:100%;margin-top:-10px;" @click="sendCode('register')">点击发送验证码</el-button>
+        </el-form-item>
+        <el-form-item prop="id" label="员工ID：">
+          <el-input type="text" v-model="registerForm.id" prefix-icon="el-icon-bank-card" auto-complete="off" placeholder="员工ID"></el-input>
+        </el-form-item>
+        <el-form-item prop="key" label="账号：">
+          <el-input type="text" v-model="registerForm.key" prefix-icon="el-icon-user" auto-complete="off" placeholder="用户名"></el-input>
+        </el-form-item>
+
+        <el-form-item prop="checkPass1" label="密码：">
+          <el-input type="password" v-model="registerForm.checkPass1" prefix-icon="el-icon-unlock" auto-complete="off" placeholder="新密码"></el-input>
+        </el-form-item>
+        <el-form-item prop="checkPass2" label="确认密码：">
+          <el-input type="password" v-model="registerForm.checkPass2" prefix-icon="el-icon-unlock" auto-complete="off" placeholder="确认新密码"></el-input>
+        </el-form-item>
+          <el-button type="primary" style="width: 100%" @click="submitClick">注册</el-button>
+     
+      </el-form>
+    </el-tab-pane>
   </el-tabs>
 </template>
 <script>
+import {validatePhone,validateMail,isEngNumLine} from "@/utils/validate";
+const TIME_COUNT = 60
   export default {
     data() {
       return {
-        rules: {
-          account: [{
-            required: false,
-            message: '请输入用户名',
-            trigger: 'blur'
-          }],
-          checkPass: [{
-            required: false,
-            message: '请输入密码',
-            trigger: 'blur'
-          }],
-          checkCode:[{
-            required:false,
-            message:'请输入验证码',
-            trigger:'blur'
-          }]
+        //登录
+        loginRules: {
+          account: [{required: false, message: '请输入用户名', trigger: 'blur'}],
+          checkPass: [{required: false, message: '请输入密码', trigger: 'blur'}],
+          checkCode: [{required: false,message: '请输入验证码',trigger: 'blur'}]
+        },
+        //注册
+        registerRules: {
+          mail:[{required: true,validator:validateMail,trigger:"blur"}],
+          tel:[{required: true,message: '请输入手机号',trigger: 'blur'},{validator:validatePhone,trigger:"blur"}],
+          checkCode:[{required: true,message: '请输入验证码',trigger: 'blur'}],
+          id: [{ required: true,message: '请输入员工id',trigger: 'blur'},{type:'number',message:'请输入正确的员工ID',trigger:"blur"}],
+          key: [{ required: true,message: '请输入用户名',trigger: 'blur'},
+                {validator:isEngNumLine,message: '请输入字母数字或下划线',trigger:'blur'}],
+          checkPass1: [{ required: true,message: '请输入密码',trigger: 'blur'},{validator:isEngNumLine,trigger:"blur"}],
+          checkPass2: [{ required: true,message: '请再次输入密码',trigger: 'blur'},
+                       {validator:(rule,value,callback)=>{
+                         if(value===''){callback(new Error('请再次输入密码'))}
+                         else if(value!==this.registerForm.checkPass1){callback(new Error('两次输入密码不一致'))}
+                         else{callback( )}},trigger:'blur'}
+                      ],
+        },
+        //忘记密码
+        forgetRules:{
+          mail:[{required: true,validator:validateMail,trigger:"blur"}],
+          tel:[{required: true,message: '请输入手机号',trigger: 'blur'},{validator:validatePhone,trigger:"blur"}],
+          checkCode:[{required: true,message: '请输入验证码',trigger: 'blur'}],
+          id: [{ required: true,message: '请输入员工id',trigger: 'blur'},{type:'number',message:'请输入正确的员工ID',trigger:"blur"}],
+          
+          checkPass1: [{ required: true,message: '请输入密码',trigger: 'blur'},{validator:isEngNumLine,trigger:"blur"}],
+          checkPass2: [{ required: true,message: '请再次输入密码',trigger: 'blur'},
+                       {validator:(rule,value,callback)=>{
+                         if(value===''){callback(new Error('请再次输入密码'))}
+                         else if(value!==this.registerForm.checkPass1){callback(new Error('两次输入密码不一致'))}
+                         else{callback( )}},trigger:'blur'}
+                      ],
         },
         checked: true,
         loginForm: {
           key: '',
           password: '',
-          vcode:''
+          vcode: ''
         },
-        identifyCode: "",
-        identifyCodes: [],
+        registerForm:{
+          id: '',
+          key: '',
+          checkPass1: '',
+          checkPass2: '',
+          tel:'',
+          mail:'',
+          checkCode:'',
+        },
+        forgetForm:{
+          id: '',
+          checkPass1: '',
+          checkPass2: '',
+          tel:'',
+          mail:'',
+          checkCode:'',
+        },
         loading: false,
-        randomNum: function() {},
         contentWidth: 100,
         contentHeight: 40,
-        imgCode:'url'
+        imgCode: '',
+        radio:'1',
+        isTel:false,
+        isTel1:false,
+        diaglogVisible:false,
+        forgetRadio:'1',
       }
     },
-    created(){
+    created() {
       this.getIdentifyCode();
     },
+
     methods: {
       submitClick: function() {
         var _this = this;
-       // console.log(_this);
-        console.log("click");
-        // var path = _this.$route.query.redirect;
-        // this.$router.replace({path:"/home"});//56-58行：测试
         this.loading = true;
         this.axios.post("/user/password/login/operation", {
-          key:"admin",//this.loginForm.username,
-          password:"123",// this.loginForm.password,
-          vcode:"1234"
+          key: this.loginForm.key, //this.loginForm.username,
+          password: this.loginForm.password, // this.loginForm.password,
+          vcode: this.loginForm.vcode
         }).then(response => {
           console.log(response);
           _this.loading = false;
-          if (resp && resp.status == 200) {
+          if (response && response.status == 200) {
             var data = response.data
             _this.$store.commit("login", data.obj);
-            // var roleId = data.roleInfos[0].roleId
-            // this.$store.state.user.userId = data.userId
-            // this.$store.state.user.username = data.username
-            // this.$store.state.user.cname = data.cname
-            // this.$store.state.user.roleId = data.roleInfos[0].roleId
-            // this.$store.state.user.roleName = data.roleInfos[0].roleDesc
-            // this.$store.state.user.roleDepart = data.roleDepart
-            // this.initRoutesStore(data.roleInfos[0].sysFuns)
-            // 当前登录用户的第一个子地址
-            // var firstSubUri = data.roleInfos[0].sysFuns[0].subSysFunList[0].nodeURL;
             var path = _this.$route.query.redirect;
             _this.$router.replace({
-              path: path == "/" || path == undefined ? "/home" : path
+              path: path == "/" || path == undefined ? "/about" : path
             })
-            //管理员端：
-            // if (this.$store.state.user.roleId === 1) {
-            //   _this.$router.replace({
-            //     path: path == "/" || path == undefined ? "/schedule/note" : path
-            //   })
-            // }
-            // //普通用户端
-            // else if (this.$store.state.user.roleId === 2) {
-            //   _this.$router.replace({
-            //     path: path == "/" || path == undefined ? "/attendence/staff" : path
-            //   })
-            // }
-            // // 其他的用户
-            // else {
-            //   _this.$router.replace({
-            //     path: path == "/" || path == undefined ? firstSubUri : path
-            //   })
-            // }
           }
         })
       },
-      /**
-       * 是否刷新
-       */
-
-      getIdentifyCode: function() {
-        // this.identifyCode = "";
-        // this.makeCode(this.identifyCodes, 4);
-        // console.log("验证码：" + this.identifyCodes);
-        // var num = Math.ceil(Math.random()*10);
-        // this.imgCode = 'url'+num;
-        this.axios.get("/graph/vcode",{
-        responseType:"arraybuffer"
-        }).then(response=>{
-          return 'data:image/png;base64,'+btoa(
-            new Uint8Array(response.data).reduce((data,byte)=>data+String.fromCharCode(byte),"")
-          );
-        // console.log("created:")
-        // let data = response.data;
-        // console.log(data);
-        // this.imgCode="";
-        // this.imgCode=this.imgCode+data;
-      }).then(data=>{
-        this.imgCode = data;
-        console.log("data:"+data);
-      }).catch(ex=>{
-        console.log(ex);
-      })
+      changeRadio:function(){
+        this.isTel = !this.isTel;
       },
-        makeCode(o, l) {
-          for (let index = 0; index < l; index++) {
-            console.log("makeCode():this.identifyCode.length:" + this.identifyCodes.length)
-            this.identifyCode += this.identifyCodes[this.randomNum(0, this.identifyCodes.length)];
+      changeForgetRadio:function(){
+        console.log(!this.isTel1);
+        this.isTel1 = !this.isTel1;
+      },
+      sendCode: function(str) {
+        let userid='' ;
+        let email='';
+        let tel=''; 
+        if (str==='forget') {
+          userid=this.forgetForm.id;
+          if (this.isTel1===true) {
+            tel = this.forgetForm.tel;
+          }else{
+            email = this.forgetForm.mail;
           }
-        },
+        }else if (str==='register') {
+          userid=this.registerForm.id;
+          if (this.isTel===true) {
+            tel = this.registerForm.tel;
+          }else{
+            email = this.registerForm.mail;
+          }
+        }else{
+          console.error('Send Code Error!');
+        }
+        var datas = {
+          id: userid,
 
-          initUserStore: function(userInfo) {},
-          initRoutesStore: function(routes) {
-            console.log(routes)
-            this.$store.state.routes = []
-            for (let i of routes) {
-              this.$store.state.routes.push({
-                name: i.displayName,
-                displayOrder: i.displayOrder,
-                nodeId: i.nodeId,
-                children: i.subSysFunList
-              })
-            }
+        };
+        this.axios.post("" + account, datas).then(resp => {
+          console.log("API测试");
+          if (resp.data && resp.data.status == 200) {
+            var data = resp.data.obj;
+            console.log("data.json:", JSON.stringify(data));
           }
+        });
+      },
+
+      //确认修改
+      ChangePassword:function() {
+        console.log("checkCode:" + this.forgetForm.checkCode+"\n"+"newPassWord:" + this.forgetForm.checkPass2);
+        this.diaglogVisible=false;
+      },
+      Cancel() {
+        this.diaglogVisible = false;
+      },
+      /**
+       * 是否刷新，获取验证码图片
+       */
+      getIdentifyCode: function() {
+        this.axios.get("/graph/vcode", {
+          responseType: "arraybuffer"
+        }).then(response => {
+          return 'data:image/png;base64,' + btoa(
+            new Uint8Array(response.data).reduce((data, byte) => data + String.fromCharCode(byte), "")
+          );
+        }).then(data => {
+          this.imgCode = data;
+          console.log("data:" + data);
+        }).catch(ex => {
+          console.log(ex);
+        })
+      },
+
+      initUserStore: function(userInfo) {},
+      initRoutesStore: function(routes) {
+        console.log(routes)
+        this.$store.state.routes = []
+        for (let i of routes) {
+          this.$store.state.routes.push({
+            name: i.displayName,
+            displayOrder: i.displayOrder,
+            nodeId: i.nodeId,
+            children: i.subSysFunList
+          })
         }
       }
-
-
+    }
+  }
 </script>
 <style>
   .login-container {
@@ -198,7 +305,7 @@
     color: #505458;
   }
   .divIdentifyCode {
-    margin-left: 74px;
+    margin-left: 0px;
     width: 100px;
     /*设置图片显示的宽*/
     height: 40px;
@@ -206,12 +313,12 @@
     background: #f1f1f1;
     text-align: center;
   }
-  .loginForm{
+  .loginForm {
     margin-left: 35px;
     margin-right: 35px;
   }
-  
-  .el-tabs_item{
-    width: 180px;
+  .el-tabs__item {
+    width: 186px;
+    border-radius: 15px 15px 0 0;
   }
 </style>
