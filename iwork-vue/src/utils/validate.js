@@ -21,7 +21,7 @@ export function validateMail(rule, value,callback){
       if (!reg.test(value)){
         return callback(new Error('请输入正确的邮箱地址'));
       } else {
-        return callback(new Error('uyhttgt'));
+        return callback();
       }
     }
 }

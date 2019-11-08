@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Login from '../views/Login.vue'
+import Register from '@/components/Register.vue'
 
 Vue.use(VueRouter)
 
@@ -9,6 +10,14 @@ const routes = [
     path: '/',
     name: '登录',
     component: Login
+  },{
+    path:'/login',
+    name: '登录',
+    component: Login
+  },{
+    path:'/register',
+    name: '登录',
+    component: Register
   },
   {
     path: '/about',

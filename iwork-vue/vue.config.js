@@ -18,14 +18,14 @@ module.exports = {
       // 查阅 https://github.com/vuejs/vue-doc-zh-cn/vue-cli/cli-service.md#配置代理
       proxy: {
         '/': {
-          target:'http://10.1.246.219:8083',
+          target:'http://192.168.137.56:8083',
           changeOrigin: true,
           pathRewrite: {
             '^/': ''
           }
         },
         '/ws/*': {
-          target: 'ws://10.1.246.219:8083',
+          target: 'ws://192.168.137.56:8083',
           ws: true
         }
 
