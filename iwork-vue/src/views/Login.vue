@@ -180,6 +180,7 @@ export default {
     background: #f1f1f1;
     text-align: center;
   }
+<<<<<<< HEAD
   .loginForm {
     margin-left: 35px;
     margin-right: 35px;
@@ -189,3 +190,6 @@ export default {
     border-radius: 15px 15px 0 0;
   }
 </style>
+=======
+</style>
+>>>>>>> d1457015f184853d71e3b5b6af5cc89c47ad2914
