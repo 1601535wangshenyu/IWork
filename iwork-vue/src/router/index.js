@@ -3,7 +3,10 @@ import Router from 'vue-router'
 import Login from '../views/Login.vue'
 import Register from '@/components/Register.vue'
 import Layout from '../layout'
-
+import About from '../views/About.vue'
+import Dashboard from '@/views/dashboard/index'
+import Documentation from'@/views/documentation/index'
+import Icons from '@/views/icons/index'
 Vue.use(Router)
 
 export const routes = [
@@ -13,7 +16,7 @@ export const routes = [
     component: Login
   },
   {
-    path: '/',
+    path: '/login',
     name: '登录',
     component: Login
   },
@@ -25,7 +28,7 @@ export const routes = [
   {
     path: '/about',
     name: 'about',
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+    component: About
   },
   {
     // 当设置 true 的时候该路由不会再侧边栏出现 如401，login等页面，或者如一些编辑页面/edit/1
@@ -44,7 +47,7 @@ export const routes = [
     children: [
       {
         path: 'dashboard',
-        component: () => import('@/views/dashboard/index'),
+        component: Dashboard,
         name: 'Dashboard',
         meta: { title: 'Dashboard', icon: 'dashboard', affix: true }
       }
@@ -56,7 +59,7 @@ export const routes = [
     children: [
       {
         path: 'index',
-        component: () => import('@/views/documentation/index'),
+        component: Documentation,
         name: 'Documentation',
         meta: { title: 'Documentation', icon: 'documentation', affix: true }
       }
@@ -70,7 +73,7 @@ export const asyncRoutes = [
     children: [
       {
         path: 'index',
-        component: () => import('@/views/icons/index'),
+        component: Icons,
         name: 'Icons',
         meta: { title: 'Icons', icon: 'icon', noCache: true }
       }
