@@ -3,36 +3,6 @@ function resolve(dir) {
   return path.join(__dirname, dir)
 }
 module.exports = {
-<<<<<<< HEAD
-    publicPath: '/',//publicPath取代了baseUrl
-    outputDir: 'dist',
-    lintOnSave: true,
-    runtimeCompiler: true, //关键点在这  原来的 Compiler 换成了 runtimeCompiler
-    // 调整内部的 webpack 配置。
-    // 查阅 https://github.com/vuejs/vue-doc-zh-cn/vue-cli/webpack.md
-    chainWebpack: () => {},
-    configureWebpack: () => {},
-    // 配置 webpack-dev-server 行为。
-    devServer: {
-      open: process.platform === 'darwin',
-      host:'localhost',
-      port: 8081,
-      https: false,
-      hotOnly: false,
-      // 查阅 https://github.com/vuejs/vue-doc-zh-cn/vue-cli/cli-service.md#配置代理
-      proxy: {
-        '/': {
-          target:'http://192.168.137.56:8083',
-          changeOrigin: true,
-          pathRewrite: {
-            '^/': ''
-          }
-        },
-        '/ws/*': {
-          target: 'ws://192.168.137.56:8083',
-          ws: true
-        }
-=======
   publicPath: '/', // publicPath取代了baseUrl
   outputDir: 'dist',
   lintOnSave: true,
@@ -59,7 +29,6 @@ module.exports = {
         target: 'ws://10.1.246.219:8083',
         ws: true
       }
->>>>>>> d1457015f184853d71e3b5b6af5cc89c47ad2914
 
     }
   },

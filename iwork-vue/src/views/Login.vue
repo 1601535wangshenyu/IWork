@@ -33,7 +33,7 @@
       <!-- 忘记密码组件 -->
       
       <el-dialog title="重置密码" :visible.sync="diaglogVisible" width="36%" >
-        <forgetPassword></forgetPassword>
+        <forgetPassword v-bind:btntxt="btntxt"></forgetPassword>
       </el-dialog>
     </el-tab-pane>
     <!-- 注册 -->
@@ -136,22 +136,6 @@ export default {
       changeDiaglog:function(visible){
         this.diaglogVisible=visible;
       },
-      //发送验证码倒计时
-      timer:function() {
-        if (this.time > 0) {
-              this.time--;
-              this.btntxt="("+this.time+")s 后重新获取";
-              setTimeout(this.timer, 1000);
-        } else{
-              this.time=0;
-              this.btntxt="获取验证码";
-              this.disabled=false;
-        }
-      },
-      startTimer(){
-        this.time=60;
-        this.timer();
-      }
     }
   }
 </script>
@@ -180,7 +164,6 @@ export default {
     background: #f1f1f1;
     text-align: center;
   }
-<<<<<<< HEAD
   .loginForm {
     margin-left: 35px;
     margin-right: 35px;
@@ -190,6 +173,3 @@ export default {
     border-radius: 15px 15px 0 0;
   }
 </style>
-=======
-</style>
->>>>>>> d1457015f184853d71e3b5b6af5cc89c47ad2914

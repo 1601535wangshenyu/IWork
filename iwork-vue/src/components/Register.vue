@@ -1,6 +1,6 @@
 <template>
     <div class="register">
-        <el-form :rules="registerRules" :model="registerForm" ref="registerRef" class="loginForm" label-position="left" label-width="100px" v-loading="loading">
+        <el-form :rules="registerRules" :model="registerForm" ref="registerRef" class="loginForm" label-position="right" label-width="100px" v-loading="loading">
         <h3 class="login_title" style="margin-bottom:24px;">注   册</h3>
           <el-radio v-model="radio" label="1" @change="changeRadio" style="margin:0px 20px 16px 30px;">邮箱注册</el-radio>
           <el-radio v-model="radio" label="2" @change="changeRadio" style="margin-bottom:5px;">手机注册</el-radio>
@@ -37,9 +37,6 @@
 import {validatePhone,validateMail,isEngNumLine} from "@/utils/validate";
 export default {
     name:'Register',
-    props:[
-        'btntxt'
-    ],
     data(){
         return{
             registerForm:{
@@ -51,16 +48,17 @@ export default {
                 mail:'',
                 checkCode:'',
             },
+
             //注册
             registerRules: {
-            mail:[{required: true,validator:validateMail,trigger:"blur"}],
-            tel:[{required: true,message: '请输入手机号',trigger: 'blur'},{validator:validatePhone,trigger:"blur"}],
-            checkCode:[{required: true,message: '请输入验证码',trigger: 'blur'}],
-            id: [{ required: true,message: '请输入员工id',trigger: 'blur'},{type:'number',message:'请输入正确的员工ID',trigger:"blur"}],
-            key: [{ required: true,message: '请输入用户名',trigger: 'blur'},
-                    {validator:isEngNumLine,message: '请输入字母数字或下划线',trigger:'blur'}],
-            checkPass1: [{ required: true,message: '请输入密码',trigger: 'blur'},{validator:isEngNumLine,trigger:"blur"}],
-            checkPass2: [{ required: true,message: '请再次输入密码',trigger: 'blur'},
+              mail:[{required: true,validator:validateMail,trigger:"blur"}],
+              tel:[{required: true,message: '请输入手机号',trigger: 'blur'},{validator:validatePhone,trigger:"blur"}],
+              checkCode:[{required: true,message: '请输入验证码',trigger: 'blur'}],
+              id: [{ required: true,message: '请输入员工id',trigger: 'blur'},{type:'number',message:'请输入正确的员工ID',trigger:"blur"}],
+              key: [{ required: true,message: '请输入用户名',trigger: 'blur'},
+                      {validator:isEngNumLine,message: '请输入字母数字或下划线',trigger:'blur'}],
+              checkPass1: [{ required: true,message: '请输入密码',trigger: 'blur'},{validator:isEngNumLine,trigger:"blur"}],
+              checkPass2: [{ required: true,message: '请再次输入密码',trigger: 'blur'},
                         {validator:(rule,value,callback)=>{
                             if(value===''){callback(new Error('请再次输入密码'))}
                             else if(value!==this.registerForm.checkPass1){callback(new Error('两次输入密码不一致'))}
@@ -71,10 +69,12 @@ export default {
             radio:'1',
             regDisCodeBtn:false,
             loading:false,
+            btntxt:'获取验证码',
+            time:60,
         }
     },
     methods:{
-        changeRadio:function(){
+        changeRadio:function(){//切换手机邮箱输入
             this.isTel = !this.isTel;
         },
         sendCode: function(str) {
@@ -83,13 +83,15 @@ export default {
             let datas={
                 phone:this.registerForm.tel
             }
-            $emit("startTimer");
+            this.timer();
             //手机号验证
+            this.$message({message:"点击成功",type:"success"})
             if (this.isTel) {
                 this.axios.post("/message/vcode/register",datas).then(resp => {
                     if (resp.data && resp.data.result == true) {
-                    console.log("手机验证码API测试"+resp);
+                      console.log("手机验证码API测试"+resp);
                     }else{
+                      this.$message({message:"发送失败",type:"error"})
                     }
                 });
             }else{//邮箱验证
@@ -129,6 +131,19 @@ export default {
             console.log("请按正确格式填写");
           }
         })
+      },
+       //发送验证码倒计时
+      timer:function() {
+        if (this.time > 0) {
+              this.time--;
+              this.btntxt="("+this.time+")s 后重新获取";
+              setTimeout(this.timer, 1000);
+        } else{
+              this.time=0;
+              this.btntxt="获取验证码";
+              this.disabled=false;
+              this.forDisCodeBtn = false;
+        }
       },
     }
 }

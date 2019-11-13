@@ -8,7 +8,7 @@ export function validatePhone(rule, value,callback) {
       if ((!reg.test(value)) && value != '') {
         callback(new Error('请输入正确的手机号码'));
       } else {
-        callback();
+        callback(); 
       }
     }
 }

@@ -7,9 +7,10 @@ import About from '../views/About.vue'
 import Dashboard from '@/views/dashboard/index'
 import Documentation from'@/views/documentation/index'
 import Icons from '@/views/icons/index'
+import Static from '@/views/test/Statistics'
 Vue.use(Router)
 
-export const routes = [
+export const constantRoutes = [
   {
     path: '/',
     name: '登录',
@@ -21,14 +22,18 @@ export const routes = [
     component: Login
   },
   {
-    path: 'register',
-    name: '登录',
+    path: '/register',
+    name: '注册',
     component: Register
   },
   {
     path: '/about',
     name: 'about',
     component: About
+  },{
+    path: '/sta',//统计图测试
+    name: '图表',
+    component: Static
   },
   {
     // 当设置 true 的时候该路由不会再侧边栏出现 如401，login等页面，或者如一些编辑页面/edit/1
@@ -83,7 +88,7 @@ export const asyncRoutes = [
 
 const createRouter = () => new Router({
   mode: 'history',
-  routes: routes,
+  routes: constantRoutes,
   scrollBehavior: () => ({ y: 0 })
 })
 

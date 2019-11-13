@@ -1,6 +1,6 @@
 <template>
     <div class="ForgetPassword">
-        <el-form class="loginForm" :model="forgetForm" ref="forgetRef" :rules="forgetRules" label-position="left" label-width="100px" v-loading="loading">
+        <el-form class="loginForm" :model="forgetForm" ref="forgetRef" :rules="forgetRules" label-position="right" label-width="100px" v-loading="loading">
           <el-radio-group v-model="forgetRadio" @change="changeForgetRadio" style="margin-bottom: 30px;">
             <el-radio-button :label="1" >邮箱验证</el-radio-button>
             <el-radio-button :label="2" >手机验证</el-radio-button>
@@ -36,7 +36,6 @@
 import {validatePhone,validateMail,isEngNumLine} from "@/utils/validate";
 export default {
     name:'ForgetPassword',
-    props:['btntxt'],
     data(){
         return{
             forgetForm:{
@@ -53,6 +52,8 @@ export default {
             forgetRadio:'1',
             forDisCodeBtn:false,
             loading:false,
+            btntxt:'获取验证码',
+            time:60,
             //忘记密码
             forgetRules:{
             mail:[{required: true,validator:validateMail,trigger:"blur"}],
@@ -79,7 +80,7 @@ export default {
         this.forDisCodeBtn = true;
         let datas={phone:this.forgetForm.tel};
         //手机号验证
-        this.$emit("startTimer");
+        this.timer();
         if (this.isTel) {
           this.axios.post("/message/vcode/register",datas).then(resp => {
             if (resp.data && resp.data.result == true) {
@@ -99,7 +100,19 @@ export default {
         }
         
       },
-
+       //发送验证码倒计时
+      timer:function() {
+        if (this.time > 0) {
+              this.time--;
+              this.btntxt="("+this.time+")s 后重新获取";
+              setTimeout(this.timer, 1000);
+        } else{
+              this.time=0;
+              this.btntxt="获取验证码";
+              this.disabled=false;
+              this.forDisCodeBtn = false;
+        }
+      },
       //确认修改
       ForgetClick:function() {
         console.log("checkCode:" + this.forgetForm.checkCode+"\n"+"newPassWord:" + this.forgetForm.checkPass2);

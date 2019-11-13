@@ -27,10 +27,10 @@ module.exports = {
     "vue/no-v-html": "off",
 
     'accessor-pairs': 2,
-    'arrow-spacing': [2, {
-      'before': true,
-      'after': true
-    }],
+    // 'arrow-spacing': [2, {
+    //   'before': true,
+    //   'after': true
+    // }],
     'block-spacing': [2, 'always'],
     'brace-style': [2, '1tbs', {
       'allowSingleLine': true
