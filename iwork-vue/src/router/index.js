@@ -7,7 +7,7 @@ import About from '../views/About.vue'
 import Dashboard from '@/views/dashboard/index'
 import Documentation from'@/views/documentation/index'
 import Icons from '@/views/icons/index'
-import Static from '@/views/test/Statistics'
+import Static from '@/views/testChart/Statistics'
 Vue.use(Router)
 
 export const constantRoutes = [

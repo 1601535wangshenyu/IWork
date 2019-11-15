@@ -20,6 +20,15 @@
                 msg: 'BarChart',
                 goods: {},
                 option: {
+                    title: { 
+                        text: "折线统计图",
+                        left: 'center',
+                        top: 20,
+                        textStyle: {
+                            color: '#666',
+                            fontStyle: '' //标题字体
+                        }
+                    },
                     legend: {data:[]},
                     xAxis: {
                         type: 'category',
@@ -60,6 +69,7 @@
                 // 基于准备好的dom，初始化echarts实例
                 let lineChart = echarts.init(document.getElementById('lineChart'));
                 lineChart.setOption(this.option);
+                lineChart.showLoading();
                 axios.get("json/data.json").then((resp)=>{
                     setTimeout(()=>{
                         let data = resp.data;

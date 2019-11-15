@@ -38,7 +38,7 @@
                 let myChart = echarts.init(document.getElementById('myChart'))
                 // 绘制图表
                 myChart.setOption({
-                    title: {}, //{text: '异步数据加载示例'},
+                    title: {text:'柱状统计图'}, //{text: '异步数据加载示例'},
                     tooltip: {},
                     xAxis: {
                         data: [] //横坐标数据
@@ -47,8 +47,9 @@
                     series: [{
                         name: '销量',
                         type: 'bar',
+                        color: ['#5CACEE'],
                         data: [] //纵坐标数据
-                    }]
+                    }],
                 });
                 //显示加载动画
                 myChart.showLoading();

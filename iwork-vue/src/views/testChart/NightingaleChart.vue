@@ -4,17 +4,16 @@
 </template>
 <script>
     var echarts = require('echarts');
+    const axios = require('axios');
     export default {
-        name:'nightingaleChart',
+        name: 'nightingaleChart',
         props: ['options', 'id'],
         data() {
             return {
                 op: {
-                    //需要的话下面内容copy到主体代码块即可
                     backgroundColor: '#ffffff',
-                    //标题
                     title: {
-                        text: '员工年龄分布',
+                        text: '南丁格尔图',
                         left: 'center',
                         top: 20,
                         textStyle: {
@@ -22,13 +21,9 @@
                             fontStyle: '' //标题字体
                         }
                     },
-                    // //图例，选择要显示的项目
-                    // legend: {
-                    //     orient: 'vertical',
-                    //     left: 'left',
-                    //     data: ['直接访问', '邮件营销', '联盟广告', '视频广告', '搜索引擎'] //注意要和数据的name相对应
-                    // },
-                    
+                    tooltip: {
+                        trigger: 'item'
+                    },
                     //视觉映射组件，将数据映射到视觉元素上
                     visualMap: {
                         show: false,
@@ -37,8 +32,6 @@
                         dimension: 0, //选取数据的维度，如人数据：[身高，体重]，则1代表将体重进行映射，默认值为数组的最后一位
                         // seriesIndex: 4, //选取数据集合中的哪个数组，如{一班}，{二班}，默认选取data中的所有数据集
                         inRange: {
-                            //选定了要映射的对象，用inRange详细写要渲染的具体细节，[x，y]中x指最小值对应的量（亮度，饱和度等），y指最大值对应的量，其余的按各自value线性渲染
-                            
                             colorLightness: [0, 1]
                         }
                     },
@@ -48,13 +41,26 @@
                         type: 'pie',
                         radius: '55%',
                         center: ['50%', '50%'],
-                        formatter: '{d}%',
-                        data: [
-                            {value: 335, name: '18~20岁'},
-                            {value: 310,name: '50~60岁'},
-                            {value: 274,name: '40~50岁'},
-                            {value: 235,name: '30~40岁'},
-                            {value: 400,name: '20~30岁'}
+                        data: [{
+                                value: 335,
+                                name: '18~20岁'
+                            },
+                            {
+                                value: 310,
+                                name: '50~60岁'
+                            },
+                            {
+                                value: 274,
+                                name: '40~50岁'
+                            },
+                            {
+                                value: 235,
+                                name: '30~40岁'
+                            },
+                            {
+                                value: 400,
+                                name: '20~30岁'
+                            }
                         ].sort(function(a, b) {
                             return a.value - b.value;
                         }),
@@ -73,11 +79,13 @@
                                 },
                             }
                         },
-                        itemStyle: { //图例样式
+                        itemStyle: {
                             normal: {
-                                color: '#f1fdff',
-                                shadowBlur: 200, //阴影模糊程度
-                                shadowColor: 'rgba(0, 0, 0, 0.5)' //阴影颜色，一般黑
+                                color: '#f1fdff'
+                            },
+                            emphasis: {
+                                shadowBlur: 200,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
                             }
                         },
                         animationType: 'scale', //初始动画效果，scale是缩放，expansion是展开
@@ -90,9 +98,41 @@
             }
         },
         mounted: function() {
-            console.log("echarts")
-            let myChart = echarts.init(this.$refs['ref']);
-            myChart.setOption(this.op);
+            this.drawNightingale();
+        },
+        created: function() {
+            axios.get('json/data.json').then(res => {
+                const data = res.data;
+                this.goods = data
+                console.log(this.goods);
+                console.log(Array.from(this.goods.xAxis.data));
+            })
+        },
+        methods: {
+            drawNightingale: function() {
+                let nightingaleCHart = echarts.init(this.$refs['ref']);
+                nightingaleCHart.setOption(this.op);
+                nightingaleCHart.showLoading();
+                axios.get("json/data.json").then((resp) => {
+                    setTimeout(() => {
+                        let data = resp.data;
+                        let list = data.series.map(good => {
+                            let list = good.data;
+                            console.log("折线图：");
+                            console.log(...list);
+                            return [...list];
+                        });
+                        console.log(Array.from(...list));
+                        nightingaleCHart.hideLoading();
+                        nightingaleCHart.setOption({
+                            title: data.title,
+                            series: [{
+                               // data: Array.from(...list)
+                            }]
+                        });
+                    }, 3000);
+                });
+            }
         }
     }
 </script>

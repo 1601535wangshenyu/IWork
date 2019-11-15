@@ -1,26 +1,31 @@
 <!--统计图测试文件-->
 <template>
 <el-col>
-  <el-col>
-  </el-col>
-  <el-col>
+  <el-row>
     <el-col :span="12">
       <v-echarts id="echart1" :options='echartsOptions1' ></v-echarts>
     </el-col>
     <el-col :span="12">
       <bar-chart id="echart2" :options='echartsOptions2'></bar-chart>
     </el-col>
-  </el-col>
+  </el-row>
+  <el-row>
+    <el-col :span="12">
+      <line-chart id="echart3"></line-chart>
+    </el-col>
+  </el-row>
 </el-col>
 </template>
  
 <script>
-import vEcharts from '@/views/test/NightingaleChart'
-import barChart from '@/views/test/BarChart'
+import vEcharts from '@/views/testChart/NightingaleChart'
+import barChart from '@/views/testChart/BarChart'
+import lineChart from '@/views/testChart/LineChart'
 export default {
   components:{ 
     vEcharts ,
-    barChart
+    barChart,
+    lineChart
   },
   data () {
     return {
